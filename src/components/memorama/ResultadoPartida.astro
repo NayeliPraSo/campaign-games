@@ -1,0 +1,164 @@
+<div class="resultado-overlay" data-memorama-resultado hidden>
+  <section
+    class="resultado"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="resultado-titulo"
+    aria-describedby="resultado-descripcion"
+  >
+    <div class="resultado__contenido">
+      <div class="resultado__icono" aria-hidden="true">🏆</div>
+
+      <h2 id="resultado-titulo" data-resultado-titulo>¡Partida terminada!</h2>
+
+      <p id="resultado-descripcion" data-resultado-mensaje>
+        Aquí aparecerá el resultado de tu partida.
+      </p>
+
+      <div class="resultado__estadisticas">
+        <div>
+          <span>Puntuación</span>
+          <strong data-resultado-puntos>0</strong>
+        </div>
+
+        <div>
+          <span>Tiempo</span>
+          <strong data-resultado-tiempo>00:00</strong>
+        </div>
+
+        <div>
+          <span>Intentos</span>
+          <strong data-resultado-intentos>0</strong>
+        </div>
+
+        <div>
+          <span>Parejas</span>
+          <strong data-resultado-parejas>0 / 8</strong>
+        </div>
+      </div>
+
+      <button
+        class="resultado__reiniciar"
+        type="button"
+        data-memorama-reiniciar
+      >
+        Jugar de nuevo
+      </button>
+    </div>
+  </section>
+</div>
+
+<style>
+  .resultado-overlay[hidden] {
+    display: none;
+  }
+
+  .resultado-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1rem;
+    border-radius: 16px;
+
+    background: rgba(10, 18, 32, 0.75);
+    backdrop-filter: blur(5px);
+  }
+
+  .resultado {
+    width: min(100%, 580px);
+    max-height: calc(100% - 2rem);
+    overflow-y: auto;
+    padding: clamp(1rem, 3vw, 2rem);
+
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    text-align: center;
+  }
+
+  .resultado__contenido {
+    width: 100%;
+  }
+
+  .resultado__icono {
+    font-size: 3rem;
+  }
+
+  .resultado h2 {
+    margin: 0.75rem 0;
+    color: #172033;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .resultado p {
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  .resultado__estadisticas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .resultado__estadisticas > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: #f8fafc;
+  }
+
+  .resultado__estadisticas span {
+    color: #64748b;
+    font-size: 0.85rem;
+  }
+
+  .resultado__estadisticas strong {
+    color: #172033;
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .resultado__reiniciar {
+    width: 100%;
+    max-width: 280px;
+    padding: 0.9rem 1.5rem;
+    border: 0;
+    border-radius: 12px;
+    background: #ea5b0c;
+    color: white;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .resultado__reiniciar:hover {
+    background: #c94d09;
+  }
+
+  .resultado__reiniciar:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+  }
+
+  @media (min-width: 600px) {
+    .resultado__estadisticas {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .resultado__reiniciar {
+      transition: none;
+    }
+  }
+</style>

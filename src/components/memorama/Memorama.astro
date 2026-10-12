@@ -1,0 +1,156 @@
+---
+import Tablero from "./Tablero.astro";
+import PanelPartida from "./PanelPartida.astro";
+import ResultadoPartida from "./ResultadoPartida.astro";
+
+import {
+  generarCartas,
+  barajarCartas,
+} from "../../lib/memorama/generadorBaraja";
+
+import type { ConfigCampaña } from "../../types/campanas";
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+}
+
+const {
+  titulo = "Memorama",
+  descripcion = "Encuentra todas las parejas para ganar.",
+} = Astro.props;
+
+const config: ConfigCampaña = {
+  id: "memorama-demo",
+  nombre: "Memorama de prueba",
+  totalPares: 8,
+  tiempoLimite: 15,
+  maximoIntentos: 0,
+  modoPuntuacion: "hibrido",
+  rutasImagenes: Array.from(
+    { length: 8 },
+    (_, indice) =>
+      `/games/memory/cards/card-${String(indice + 1).padStart(2, "0")}.webp`,
+  ),
+};
+
+const cartas = barajarCartas(generarCartas(config));
+---
+
+<section
+  class="memorama"
+  data-memorama
+  data-config={JSON.stringify(config)}
+  aria-labelledby="memorama-titulo"
+>
+  <header class="memorama__encabezado">
+    <h1 id="memorama-titulo">{titulo}</h1>
+    <p>{descripcion}</p>
+  </header>
+
+  <div class="memorama__contenido">
+    <div class="memorama__panel">
+      <PanelPartida
+        totalPares={config.totalPares}
+        tiempoLimite={config.tiempoLimite}
+        maximoIntentos={config.maximoIntentos}
+      />
+    </div>
+
+    <div class="memorama__tablero">
+      <Tablero cartas={cartas} />
+      <ResultadoPartida />
+    </div>
+  </div>
+
+  <p
+    class="memorama__estado"
+    data-memorama-estado
+    role="status"
+    aria-live="polite"
+  >
+    Encuentra las parejas.
+  </p>
+</section>
+
+<script>
+  import { inicializarMemorama } from "../../lib/memorama/controladorMemorama";
+  import type { ConfigCampaña } from "../../types/campanas";
+
+  document
+    .querySelectorAll<HTMLElement>("[data-memorama]")
+    .forEach((contenedor) => {
+      const configJSON = contenedor.dataset.config;
+
+      if (!configJSON) return;
+
+      const config = JSON.parse(configJSON) as ConfigCampaña;
+
+      inicializarMemorama(contenedor, config);
+    });
+</script>
+
+<style>
+  .memorama {
+    width: min(100% - 2rem, 1100px);
+    margin-inline: auto;
+    padding-block: 3rem;
+  }
+
+  .memorama__encabezado {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .memorama__encabezado h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  .memorama__encabezado p {
+    margin: 0;
+    color: #64748b;
+  }
+
+  .memorama__contenido {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .memorama__panel {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .memorama__dato {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+  }
+
+  .memorama__dato strong {
+    font-size: 1.25rem;
+  }
+
+  .memorama__tablero {
+    position: relative;
+    min-width: 0;
+  }
+
+  .memorama__estado {
+    margin-top: 2rem;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  @media (min-width: 992px) {
+    .memorama__contenido {
+      grid-template-columns: 240px minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+</style>

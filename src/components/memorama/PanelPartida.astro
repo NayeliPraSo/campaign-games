@@ -1,0 +1,78 @@
+---
+interface Props {
+  totalPares: number;
+  tiempoLimite: number;
+  maximoIntentos: number;
+}
+
+const { totalPares, tiempoLimite, maximoIntentos } = Astro.props;
+---
+
+<aside class="panel-partida" aria-label="Estadísticas de la partida">
+  <div class="panel-partida__item">
+    <span class="panel-partida__etiqueta">Tiempo</span>
+    <strong data-memorama-tiempo>00:00</strong>
+    <small>
+      {tiempoLimite > 0 ? "Tiempo restante" : "Tiempo transcurrido"}
+    </small>
+  </div>
+
+  <div class="panel-partida__item">
+    <span class="panel-partida__etiqueta">Intentos</span>
+    <strong>
+      <span data-memorama-intentos>0</span>
+      {maximoIntentos > 0 && <span> / {maximoIntentos}</span>}
+    </strong>
+  </div>
+
+  <div class="panel-partida__item">
+    <span class="panel-partida__etiqueta">Parejas encontradas</span>
+    <strong data-memorama-parejas>0 / {totalPares}</strong>
+  </div>
+
+  <div class="panel-partida__item">
+    <span class="panel-partida__etiqueta">Puntuación final</span>
+    <strong data-memorama-puntuacion>—</strong>
+  </div>
+</aside>
+
+<style>
+  .panel-partida {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .panel-partida__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .panel-partida__etiqueta {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .panel-partida__item strong {
+    color: #172033;
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .panel-partida__item small {
+    color: #64748b;
+    font-size: 0.75rem;
+  }
+
+  @media (min-width: 992px) {
+    .panel-partida {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

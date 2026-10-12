@@ -1,0 +1,99 @@
+---
+import type { Carta as CartaTipo } from "../../types/memorama";
+
+interface Props {
+  carta: CartaTipo;
+}
+
+const { carta } = Astro.props;
+---
+
+<button
+  class="carta"
+  type="button"
+  data-carta-id={carta.id}
+  data-pareja-id={carta.parejaId}
+  aria-label={`Carta ${carta.id + 1}`}
+  aria-pressed={carta.estaVolteada || carta.emparejada}
+>
+  <span class="carta__interior">
+    <span class="carta__reverso" aria-hidden="true">
+      <span>?</span>
+    </span>
+
+    <span class="carta__frente" aria-hidden="true">
+      <img src={carta.imagen} alt="" draggable="false" />
+    </span>
+  </span>
+</button>
+
+<style>
+  .carta {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+    perspective: 1000px;
+  }
+
+  .carta__interior {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform-style: preserve-3d;
+    transition: transform 0.45s ease;
+  }
+
+  .carta[aria-pressed="true"] .carta__interior {
+    transform: rotateY(180deg);
+  }
+
+  .carta__reverso,
+  .carta__frente {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    overflow: hidden;
+  }
+
+  .carta__reverso {
+    background: linear-gradient(135deg, #ea5b0c, #f59e0b);
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+  }
+
+  .carta__frente {
+    background: white;
+    border: 2px solid #e2e8f0;
+    transform: rotateY(180deg);
+  }
+
+  .carta__frente img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+  }
+
+  .carta:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 4px;
+  }
+
+  .carta:disabled {
+    cursor: default;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carta__interior {
+      transition: none;
+    }
+  }
+</style>

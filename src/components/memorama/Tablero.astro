@@ -1,0 +1,31 @@
+---
+import Carta from "./Carta.astro";
+import type { Carta as CartaTipo } from "../../types/memorama";
+
+interface Props {
+  cartas: CartaTipo[];
+}
+
+const { cartas } = Astro.props;
+---
+
+<div class="tablero" aria-label="Tablero de memorama">
+  {cartas.map((carta) => <Carta carta={carta} />)}
+</div>
+
+<style>
+  .tablero {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.5rem, 2vw, 1rem);
+    width: 100%;
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 480px) {
+    .tablero {
+      gap: 0.5rem;
+    }
+  }
+</style>
