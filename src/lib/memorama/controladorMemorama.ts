@@ -239,6 +239,10 @@ export function inicializarMemorama(
       boton.setAttribute('aria-pressed', String(visible));
       boton.dataset.emparejada = String(carta.emparejada);
 
+      if (!visible) {
+        delete boton.dataset.error;
+      }
+
       boton.setAttribute(
         'aria-label',
         carta.emparejada
@@ -354,6 +358,11 @@ export function inicializarMemorama(
 
     estado = resolucion.nuevoEstado;
 
+    if (resolucion.resultado.tipo === 'error') {
+      botones.get(primera)?.setAttribute('data-error', 'true');
+      botones.get(segunda)?.setAttribute('data-error', 'true');
+    }
+
     tiempoTranscurrido =
       (performance.now() - inicioPartida) / 1000;
 
@@ -408,6 +417,7 @@ export function inicializarMemorama(
         throw new Error(`No se encontró la carta ${carta.id}.`);
       }
 
+      delete boton.dataset.error;
       tablero.appendChild(boton);
     }
 

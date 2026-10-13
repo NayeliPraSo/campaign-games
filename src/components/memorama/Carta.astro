@@ -137,6 +137,76 @@ const { carta } = Astro.props;
     cursor: default;
   }
 
+  /* ==========================================
+   Pareja encontrada
+========================================== */
+
+  .carta[data-emparejada="true"] .carta__frente {
+    border-color: #22c55e;
+    box-shadow:
+      0 0 0 2px rgba(34, 197, 94, 0.2),
+      0 0 18px rgba(34, 197, 94, 0.25);
+  }
+
+  .carta[data-emparejada="true"] {
+    animation: carta-acierto 0.5s ease;
+  }
+
+  @keyframes carta-acierto {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.06);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* ==========================================
+   Pareja incorrecta
+========================================== */
+
+  .carta[data-error="true"] {
+    animation: carta-error 0.4s ease-in-out;
+  }
+
+  .carta[data-error="true"] .carta__frente {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
+
+  @keyframes carta-error {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    20%,
+    60% {
+      transform: translateX(-3px);
+    }
+
+    40%,
+    80% {
+      transform: translateX(3px);
+    }
+  }
+
+  /* ==========================================
+   Accesibilidad
+========================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .carta[data-emparejada="true"],
+    .carta[data-error="true"] {
+      animation: none;
+    }
+  }
+
   @media (max-width: 480px) {
     .carta__frente {
       border-width: 1px;
