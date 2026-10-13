@@ -237,6 +237,7 @@ export function inicializarMemorama(
       const visible = carta.estaVolteada || carta.emparejada;
 
       boton.setAttribute('aria-pressed', String(visible));
+      boton.dataset.emparejada = String(carta.emparejada);
 
       boton.setAttribute(
         'aria-label',

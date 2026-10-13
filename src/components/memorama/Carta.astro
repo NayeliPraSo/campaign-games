@@ -13,16 +13,23 @@ const { carta } = Astro.props;
   type="button"
   data-carta-id={carta.id}
   data-pareja-id={carta.parejaId}
+  data-emparejada={String(carta.emparejada)}
   aria-label={`Carta ${carta.id + 1}`}
   aria-pressed={carta.estaVolteada || carta.emparejada}
 >
   <span class="carta__interior">
     <span class="carta__reverso" aria-hidden="true">
-      <span>?</span>
+      <span class="carta__simbolo">?</span>
     </span>
 
     <span class="carta__frente" aria-hidden="true">
-      <img src={carta.imagen} alt="" draggable="false" />
+      <img
+        src={carta.imagen}
+        alt=""
+        draggable="false"
+        loading="eager"
+        decoding="async"
+      />
     </span>
   </span>
 </button>
@@ -30,22 +37,41 @@ const { carta } = Astro.props;
 <style>
   .carta {
     position: relative;
+    display: block;
     width: 100%;
+    min-width: 0;
     aspect-ratio: 3 / 4;
+
     padding: 0;
     border: 0;
-    border-radius: 12px;
+    border-radius: clamp(7px, 1.5vw, 14px);
+
     background: transparent;
     cursor: pointer;
+
     perspective: 1000px;
+    -webkit-tap-highlight-color: transparent;
+
+    transition: transform 0.2s ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .carta:not(:disabled):hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  .carta:active:not(:disabled) {
+    transform: scale(0.97);
   }
 
   .carta__interior {
     position: absolute;
     inset: 0;
     display: block;
+
     transform-style: preserve-3d;
-    transition: transform 0.45s ease;
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
   .carta[aria-pressed="true"] .carta__interior {
@@ -56,42 +82,74 @@ const { carta } = Astro.props;
   .carta__frente {
     position: absolute;
     inset: 0;
+
     display: grid;
     place-items: center;
-    border-radius: 12px;
+
+    border-radius: inherit;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
     overflow: hidden;
   }
 
   .carta__reverso {
     background: linear-gradient(135deg, #ea5b0c, #f59e0b);
-    color: white;
-    font-size: 2.5rem;
+    color: #fff;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  }
+
+  .carta__simbolo {
+    font-size: clamp(1.2rem, 4vw, 2.8rem);
     font-weight: 800;
+    line-height: 1;
+    user-select: none;
   }
 
   .carta__frente {
-    background: white;
+    background: #fff;
     border: 2px solid #e2e8f0;
+
     transform: rotateY(180deg);
   }
 
   .carta__frente img {
+    display: block;
     width: 85%;
     height: 85%;
     object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .carta[data-emparejada="true"] .carta__frente {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
   }
 
   .carta:focus-visible {
     outline: 3px solid #2563eb;
-    outline-offset: 4px;
+    outline-offset: 3px;
   }
 
   .carta:disabled {
     cursor: default;
   }
 
+  @media (max-width: 480px) {
+    .carta__frente {
+      border-width: 1px;
+    }
+
+    .carta__frente img {
+      width: 90%;
+      height: 90%;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .carta,
     .carta__interior {
       transition: none;
     }
